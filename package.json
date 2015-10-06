@@ -1,0 +1,15 @@
+{
+  "name": "smart-room",
+  "private": true,
+  "license": "Copyright 2015 Bharat Arimilli",
+  "version": "1.0.0",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  },
+  "author": "Bharat Arimilli",
+  "devDependencies": {
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-text-replace": "^0.4.0"
+  }
+}

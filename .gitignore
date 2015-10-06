@@ -1,0 +1,4 @@
+node_modules/
+SmartRoomAPI/assets/SmartRoomOnline/
+SmartRoomAPI/assets/js/dependencies/sails.io.js
+SmartRoomOnline/app/jsconfig.json
