@@ -32,10 +32,13 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
-  }
+  //View Routes
+  '/':'ViewController.client',
+  '/app/*':'ViewController.client'
 
+  //View Routes
+    
+    
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

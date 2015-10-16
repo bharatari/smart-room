@@ -1,9 +1,7 @@
 {
-  "name": "SmartRoom",
+  "name": "smart-room-api",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
-  "keywords": [],
+  "version": "1.0.0",
   "dependencies": {
     "ejs": "~0.8.4",
     "grunt": "0.4.5",
@@ -28,10 +26,6 @@
     "start": "node app.js"
   },
   "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/anonymous node/sails user/SmartRoom.git"
-  },
-  "author": "anonymous node/sails user",
-  "license": ""
+  "author": "Bharat Arimilli",
+  "license": "Copyright 2015 Bharat Arimilli"
 }

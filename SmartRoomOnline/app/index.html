@@ -9,6 +9,8 @@
 
     {{content-for 'head'}}
 
+    <!-- Cosmo Bootstrap Theme -->
+    <link rel="stylesheet" href="assets/bootstrap.min.css"/>
     <link rel="stylesheet" href="assets/vendor.css">
     <link rel="stylesheet" href="assets/smart-room-online.css">
 
@@ -18,6 +20,9 @@
     {{content-for 'body'}}
 
     <script src="assets/vendor.js"></script>
+    <script>
+        io.sails.url = "http://localhost:1337";
+    </script>
     <script src="assets/smart-room-online.js"></script>
 
     {{content-for 'body-footer'}}

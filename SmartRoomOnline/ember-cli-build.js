@@ -6,6 +6,18 @@ module.exports = function(defaults) {
     // Add options here
   });
 
+  app.import('bower_components/bootstrap/dist/js/bootstrap.min.js');
+  app.import('bower_components/moment/moment.js');
+  app.import('vendor/sails.io.js');
+  
+  var mergeTrees = require('broccoli-merge-trees');
+  var pickFiles = require('broccoli-static-compiler');
+  var extraAssets = pickFiles('bower_components/bootstrap/dist/fonts', {
+      srcDir: '/',
+      files: ['**/*'],
+      destDir: '/fonts'
+  });
+  
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //
@@ -19,5 +31,5 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  return app.toTree();
+  return mergeTrees([app.toTree(), extraAssets]);
 };
