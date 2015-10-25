@@ -1,5 +1,6 @@
 module.exports = {
     tableName: 'settings',
+    schema: true,
     attributes: {
         userId: {
             type: 'string'
@@ -14,4 +15,4 @@ module.exports = {
             type: 'json'
         }
     }
-}
+};

@@ -1,11 +1,11 @@
 module.exports = {
-    tableName: 'settings',
+    tableName: 'data',
     schema: true,
     attributes: {
-        userId: {
+        deviceId: {
             type: 'string'
         },
-        key: {
+        name: {
             type: 'string'
         },
         value: {

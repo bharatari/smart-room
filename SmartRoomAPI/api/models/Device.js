@@ -1,5 +1,6 @@
 module.exports = {
     tableName: 'devices',
+    schema: true,
     attributes: {
         deviceId: {
             type: 'string',
@@ -10,4 +11,4 @@ module.exports = {
             type: 'string'
         }
     }
-}
+};

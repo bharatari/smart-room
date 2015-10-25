@@ -1,5 +1,8 @@
+var bcrypt = require('bcrypt');
+
 module.exports = {
     tableName: 'users',
+    schema: true,
     attributes: {
         username: {
             type: 'string',
@@ -16,11 +19,13 @@ module.exports = {
             type: 'string'
         }        
     },
+    
     toJSON: function() {
         var user = this.toObject();
         delete user.password;
         return user;
     },
+    
     beforeCreate: function(user, cb) {
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(user.password, salt, function(err, hash) {
@@ -34,4 +39,4 @@ module.exports = {
             });
         });
     }
-}
+};

@@ -13,7 +13,8 @@ module.exports = {
                     cb(false, err);
                 }
                 else {
-                    sails.sockets.broadcast('notifications', 'new notification', notification);
+                    Notification.publishCreate(notification.toJSON());
+                    //sails.sockets.broadcast('notifications', 'new notification', notification);
                     cb(true);
                 }
             });
@@ -27,4 +28,4 @@ module.exports = {
      * @param {boolean} result - Success boolean value.
      * @param {string} [message] - Error message.
      */
-}
+};

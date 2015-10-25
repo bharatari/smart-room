@@ -1,1 +1,4 @@
-{{outlet}}
+{{sidebar-left}}
+{{#each data as |dataItem|}}
+	{{data-column backgroundColor=dataItem.backgroundColor name=dataItem.name value=dataItem.value custom=dataItem.custom suffix=dataItem.suffix large=dataItem.large }}
+{{/each}}

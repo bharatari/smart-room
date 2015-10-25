@@ -1,6 +1,169 @@
-/*
-Theme Name: SmartRoom CSS
-Author: Bharat Arimilli
-License: Copyright Bharat Arimilli
-Dependencies: Bootswatch Cosmo v3.3.5
-*/
+/** 
+ *
+ * Smart Room Online CSS
+ *
+ * @project - Smart Room Online
+ * @author - Bharat Arimilli
+ * @copyright - 2015
+ * @license - Copyright Bharat Arimilli
+ * @dependencies - Bootswatch Cosmo v3.3.5
+ *
+ * @contents - Table of Contents
+ *
+ * 1. Structure
+ * 2. General
+ * 3. Utilities
+ *    1. Colors
+ * 4. Media Queries
+ *
+ */
+ 
+/**
+ *
+ * @section - 1. Structure
+ *
+ */
+ 
+.column {
+    height: 100vh;
+}
+
+.sidebar-left {
+    background-color: yellow;  
+}
+
+.data-column {
+    padding-top: 40vh;
+}
+
+/**
+ *
+ * @section - 2. General
+ *
+ */
+
+.sidebar-brand {
+    font-family: 'Roboto Condensed';
+    font-size: 85px;
+    font-weight: 700;
+    margin-top: 40vh;
+    color: #353535;
+    line-height: 1;
+}
+
+.data-column-header {
+    font-family: 'Open Sans';
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 22px;
+}
+
+.data-column-data {
+    font-family: 'Roboto Condensed';
+    font-size: 90px;
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+/**
+ *
+ * @section - 3. Utilities
+ *
+ */
+
+.text-center {
+    text-align: center;
+}
+
+/**
+ *
+ * @section - 3.1 Colors
+ *
+ */
+ 
+.bg-yellow {
+    background-color: #e8d500;
+}
+
+.yellow {
+    color: #e8d500;
+}
+
+.bg-red {
+    background-color: #e04d4d;
+}
+ 
+.red {
+    color: #e04d4d;
+}
+ 
+.bg-dark-red {
+    background-color: #8f3838;
+}
+
+.dark-red {
+    color: #8f3838;
+}
+ 
+.bg-teal {
+    background-color: #00a588;
+}
+
+.teal {
+    color: #00a588;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.white {
+    color: white;
+}
+
+/**
+ *
+ * @section - 4. Media Queries
+ *
+ */
+ 
+ @media only screen and (max-width: 1530px) { 
+    .sidebar-brand {
+        font-size: 55px;
+        margin-top: 43vh;
+    }
+ }
+ 
+  @media only screen and (max-width: 991px) { 
+    .column {
+        height: auto;
+    }   
+    
+    .sidebar-brand {
+        font-size: 55px;
+        padding-top: 100px;
+        padding-bottom: 100px;
+        margin-top: 0px;
+    }
+    
+    .sidebar-left {
+        margin-top: -37px;
+        margin-bottom: -37px;
+    }
+
+    .data-column {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .data-column-header {
+        font-size: 16px;
+    }
+    
+    .data-column-data {
+        font-size: 60px;
+        margin-top: 0px;
+    }
+ }
+ 
