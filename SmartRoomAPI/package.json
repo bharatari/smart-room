@@ -19,8 +19,10 @@
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "~0.2.3",
     "include-all": "~0.1.6",
+    "jsonapi-serializer": "^2.0.4",
     "jwt-simple": "^0.3.1",
     "lodash": "^3.10.1",
+    "moment": "^2.10.6",
     "q": "^1.4.1",
     "rc": "~1.0.1",
     "sails": "^0.11.0",
@@ -33,5 +35,8 @@
   },
   "main": "app.js",
   "author": "Bharat Arimilli",
-  "license": "Copyright 2015 Bharat Arimilli"
+  "license": "Copyright 2015 Bharat Arimilli",
+  "devDependencies": {
+    "sails-deploy-azure": "^0.2.10"
+  }
 }

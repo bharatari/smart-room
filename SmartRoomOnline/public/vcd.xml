@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="en-us" Name="commandSet_en-us">
+    <AppName>Smart Room</AppName>
+    <Example> What is the temperature in my room? </Example>
+
+    <Command Name="getRoomData">
+      <Example> What is the temperature in my room? </Example>
+      <ListenFor RequireAppName="BeforePhrase"> what is the {data} in [my] room </ListenFor>
+      <Feedback> Getting the {data} in your room </Feedback>
+      <VoiceCommandService Target="SmartRoomCommandService"/>
+    </Command>
+
+    <PhraseList Label="data">
+      <Item> Temperature </Item>
+      <Item> Humidity </Item>
+      <Item> Motion </Item>
+    </PhraseList>
+
+  </CommandSet>
+</VoiceCommands>
+

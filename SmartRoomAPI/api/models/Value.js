@@ -1,5 +1,5 @@
 module.exports = {
-    tableName: 'data',
+    tableName: 'values',
     schema: true,
     attributes: {
         deviceId: {
@@ -8,7 +8,7 @@ module.exports = {
         name: {
             type: 'string'
         },
-        value: {
+        result: {
             type: 'json'
         }
     }

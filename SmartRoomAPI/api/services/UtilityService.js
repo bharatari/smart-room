@@ -1,9 +1,10 @@
 var _ = require('lodash');
+var serializer = require('jsonapi-serializer');
 
 module.exports = {   
     
     /** 
-     * Uses JavaScript split function to create a 
+     * Uses JavaScript split function to create an array from a comma-separated-list.
      *
      * @param {string} csv - Comma-separated list.
      * @param {boolean} space - Whether the function should split with the ', ' or ',' delimiter.
@@ -110,6 +111,8 @@ module.exports = {
         }
     },
     
+    
+    // CHECK FOR PLURALIZED
     /** 
      * Converts Waterline sort parameters to lodash sort parameters.
      * If parameters are invalid or missing, it defaults to 'asc'.
@@ -139,10 +142,11 @@ module.exports = {
      * Modular find function to be used with any valid Sails model.
      *
      * @param {string} model - Name of the Sails model.
+     * @param {string} pluralized - Pluralized name of Sails model.
      * @param {Object} query - The req.query object from the original request.
      * @param {UtilityService~callback} cb - Called after the function finishes executing.
      */
-    find: function(model, query, cb) {
+    find: function(model, pluralized, query, cb) {
         var Model = sails.models[model];
         
         if (model) {
@@ -170,9 +174,9 @@ module.exports = {
                         cb(ErrorService.databaseError(err));
                     } else {
                         if (query.sort) {
-                            cb(null, this.sort(data, query.sort));
+                            cb(null, this.convertResponse(this.sort(data, query.sort)), pluralized);
                         } else {
-                            cb(null, data);
+                            cb(null, this.convertResponse(data, pluralized));
                         }
                     }
                 });
@@ -181,6 +185,8 @@ module.exports = {
                     cb(null, data);
                 });
             }
+        } else {
+            cb(true);
         }
     },
     /**
@@ -189,8 +195,20 @@ module.exports = {
      * @param {Array|Object|string|boolean|number} result - Result of the function call.
      */
     
-    findOne: function(model, param, cb) {
+    findOne: function(model, pluralized, param, cb) {
         var Model = sails.models[model];
+        
+        if (model && pluralized && param) {
+            Model.findOne({ id: param }).exec(function(err, result) {
+                if (err || !result) {
+                    cb(true);
+                } else {
+                    cb(null, result);
+                }
+            });    
+        } else {
+            cb(true);
+        }
     },
     
     
@@ -237,6 +255,68 @@ module.exports = {
     },
     
     destroy: function(model, param, cb) {
+        var Model = sails.models[model];
+        
+        if (model && param) {
+            Model.destroy({ id: param }).exec(function(err) {
+                if (err) {
+                    cb(true);
+                } else {
+                    cb(null, true);
+                }
+            });
+        } else {
+            cb(true);
+        }
+    },
     
+    deserialize: function(object) {
+        var deserialized = [];
+        if (object) {
+            if (object.data) {
+                for (var i = 0; i < object.data.length; i++) {
+                    var dataObject = {};
+                    if (object.data[i]) {
+                        if (object.data[i].id) {
+                            dataObject.id = object.data[i].id;
+                        }
+                        if (object.data[i].attributes) {
+                            for (var property in object.data[i].attributes) {
+                                if (object.data[i].attributes.hasOwnProperty(property)) {
+                                    dataObject[property] = object.data[i].attributes[property];
+                                }
+                            }
+                        }
+                        deserialized.push(dataObject);
+                    }
+                }
+                if (deserialized.length > 0) {
+                    return deserialized;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    },
+        
+    getProperties: function(data) {
+        var properties = [];
+        for(var property in data) {
+            if(data.hasOwnProperty(property) && (property !== "id") && (property !== "createdAt") && (property !== "updatedAt")) {
+                properties.push(property);
+            }
+        }
+        return properties;
+    },
+    
+    convertResponse: function(data, pluralized) {
+        var converted = new JSONAPISerializer(pluralized, data, {
+            attributes: this.getProperties(data)
+        });
+        return converted;
     }
 };

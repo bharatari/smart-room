@@ -32,21 +32,24 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  //View Routes
+  // View Routes
   '/':'ViewController.client',
   '/app/*':'ViewController.client',
 
-  //User Session Routes 
-  'post /api/userSession':'UserSessionController.create',    
-  'get /api/userSession':'UserSessionController.findOne',
-  'delete /api/userSession':'UserSessionController.destroy',
+  // Device Routes
+  'post /api/devices':'DeviceController.registerDevice',
     
-  //Data Routes
-  'post /api/data':'DataController.create',
-  'get /api/data':'DataController.find',
+  // Device Session Routes
+  'post /api/deviceSessions':'DeviceSessionController.create',
+  'get /api/deviceSessions':'DeviceSessionController.findOne',
+  'delete /api/deviceSessions':'DeviceSessionController.destroy',
     
-  //WebSocket Watch Routes
-  'get /api/data/subscribe':'DataController.watch',
+  // Value Routes
+  'post /api/values':'ValueController.create',
+  'get /api/values':'ValueController.find',
+    
+  // WebSocket Watch Routes
+  'get /api/values/subscribe':'ValueController.watch',
   'get /api/notifications/subscribe':'NotificationController.watch',
     
   /***************************************************************************

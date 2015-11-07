@@ -1,9 +1,10 @@
 import Ember from 'ember';
+import valueUtils from 'smart-room-online/utils/value-utils';
 
 export default Ember.Route.extend({
 	model() {
 		return Ember.RSVP.hash({
-			temperature: this.store.queryRecord('data', {
+			temperature: this.store.queryRecord('value', {
 				filter: {
 					name: 'temperature'
 				},
@@ -13,7 +14,7 @@ export default Ember.Route.extend({
 				},
 				sort: '-createdAt'
 			}),
-			humidity: this.store.queryRecord('data', {
+			humidity: this.store.queryRecord('value', {
 				filter: {
 					name: 'humidity'
 				},
@@ -23,7 +24,7 @@ export default Ember.Route.extend({
 				},
 				sort: '-createdAt'
 			}),
-			motion: this.store.queryRecord('data', {
+			motion: this.store.queryRecord('value', {
 				filter: {
 					name: 'motion'
 				},
@@ -36,8 +37,9 @@ export default Ember.Route.extend({
 		});
 	},
 	setupController(controller, model) {
-		controller.set('temperature', model.temperature);
-		controller.set('humidity', model.humidity);
-		controller.set('motion', model.motion);
-	}
+		console.log(model.temperature);
+		valueUtils.processInitial(this.get('configuration'), model.temperature, model.humidity, model.motion);
+		controller.set('configuration', this.get('configuration'));
+	},
+	configuration: valueUtils.configuration
 });

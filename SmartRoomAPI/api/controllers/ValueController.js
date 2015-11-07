@@ -1,7 +1,7 @@
 module.exports = {
     watch: function(req, res) {
         if(req.isSocket == true) {
-            Data.watch(req);
+            Value.watch(req);
             res.send('Connected');
         }
         else {
@@ -18,7 +18,7 @@ module.exports = {
      */
     /** @note - We can do a global style single object for each type of data, or create new objects for each new value to have record */
     create: function(req, res) {
-        UtilityService.create('Data', req.body, function(err, result) {
+        UtilityService.create('Value', req.body, function(err, result) {
             if (err || !result) {
                 res.badRequest(err);
             } else {
@@ -27,12 +27,40 @@ module.exports = {
         });
     },
     find: function(req, res) {
-        UtilityService.find('Data', req.query, function(err, result) {
+        UtilityService.find('Value', 'values', req.query, function(err, result) {
             if (err || !result) {
                 res.badRequest(err);
             } else {
                 res.ok(result);
             }
         });
+        /*
+        res.json({
+            "data": [{
+                "type": "value",
+                "id": "1",
+                "attributes": {
+                    "deviceId": "1",
+                    "name": "temperature",
+                    "result": 70
+                }
+            }, {
+                "type": "value",
+                "id": "2",
+                "attributes": {
+                    "deviceId": "1",
+                    "name": "humidity",
+                    "result": 80
+                }
+            }, {
+                "type": "value",
+                "id": "3",
+                "attributes": {
+                    "deviceId": "1",
+                    "name": "humidity",
+                    "result": 80
+                }
+            }]
+        })*/
     }
 };

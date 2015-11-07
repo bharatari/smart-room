@@ -1,6 +1,6 @@
 module.exports = {
     find: function(req, res) {
-        UtilityService.find('Setting', req.query, function(result) {
+        UtilityService.find('Setting', 'settings', req.query, function(result) {
             res.json(result);
         });
     },

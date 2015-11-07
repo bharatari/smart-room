@@ -1,11 +1,11 @@
 module.exports = {
-    tableName: 'userSessions',
+    tableName: 'deviceSessions',
     schema: true,
     attributes: {
         token: {
             type:'string'  
         },
-        userId: {
+        deviceId: {
             type:'string'
         }
     }

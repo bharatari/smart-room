@@ -2,7 +2,7 @@ module.exports = {
     tableName: 'devices',
     schema: true,
     attributes: {
-        deviceId: {
+        uniqueId: {
             type: 'string',
             unique: true,
             required: true
