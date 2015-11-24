@@ -1,9 +1,17 @@
+/**
+ * We won't be using device registration & authentication
+ * in our current project. I created these functions
+ * so that the server can accomodate a more modular setup/system
+ * in case I wanted to continue this project later.
+ *
+ * @author - Bharat Arimilli
+ */
 module.exports = {
-    uniqueDeviceId: function(devices, deviceId) {
+    uniqueId: function(devices, uniqueId) {
         if(devices) {
             for(var i = 0; i < devices.length; i++) {
                 if(devices[i]) {
-                    if(devices[i].deviceId === deviceId) {
+                    if(devices[i].uniqueId === uniqueId) {
                         return false;
                     }
                 }
@@ -14,10 +22,10 @@ module.exports = {
             return true;
         }
     },
-    checkUniqueDeviceId: function(deviceId, cb) {
-        if(deviceId) {
+    checkUniqueId: function(uniqueId, cb) {
+        if(uniqueId) {
             Device.find().exec(function(err, devices) {
-                if(DeviceService.uniqueDeviceId(devices, deviceId)) {
+                if(DeviceService.uniqueId(devices, uniqueId)) {
                     cb(true);
                 }
                 else {

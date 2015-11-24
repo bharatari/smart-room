@@ -4,28 +4,23 @@ module.exports = {
      *
      * @param {string} title - The title of the Notification.
      * @param {string} body - HTML for the body of the Notification.
-     * @param {NotificationService~callback} cb - Called after the function finishes executing.
+     * @param {UtilityService~callback} cb - Called after the function finishes executing.
      */
     sendNotification: function(title, body, cb) {
         if(title && body) {
             Notification.create({ title: title, body: body }).exec(function(err, notification) {
                 if(err || !notification) {
-                    cb(false, err);
+                    cb(err);
                 }
                 else {
+                    // Send WebSockets message to connected clients
                     Notification.publishCreate(notification.toJSON());
-                    //sails.sockets.broadcast('notifications', 'new notification', notification);
-                    cb(true);
+                    cb(null, true);
                 }
             });
         }
         else {
-            cb(false, "MISSING_PARAMS");
+            cb(ErrorService.missingParameter('sendNotification', 'title, body'));
         }
     }
-    /**
-     * @callback NotificationService~callback
-     * @param {boolean} result - Success boolean value.
-     * @param {string} [message] - Error message.
-     */
 };

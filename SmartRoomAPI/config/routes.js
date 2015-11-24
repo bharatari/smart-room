@@ -48,6 +48,12 @@ module.exports.routes = {
   'post /api/values':'ValueController.create',
   'get /api/values':'ValueController.find',
     
+  // Settings Routes
+  'get /api/settings':'SettingController.find',
+  'post /api/settings':'SettingController.update',
+  'put /api/settings':'SettingController.update',
+  'patch /api/settings':'SettingController.update',
+    
   // WebSocket Watch Routes
   'get /api/values/subscribe':'ValueController.watch',
   'get /api/notifications/subscribe':'NotificationController.watch',

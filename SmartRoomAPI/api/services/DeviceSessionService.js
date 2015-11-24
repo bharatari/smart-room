@@ -1,8 +1,37 @@
+/**
+ * We won't be using device registration & authentication
+ * in our current project. I created these functions
+ * so that the server can accomodate a more modular setup/system
+ * in case I wanted to continue this project later.
+ *
+ * @author - Bharat Arimilli
+ */
 var jwt = require('jwt-simple');
 var Q = require('q');
 var jwtSecret = sails.config.jwtSecret;
 
 module.exports = {
+    // Delete existing sessions
+    createSession: function(device, cb) {
+        if (device) {
+            var expires = moment().add(2, 'days').toDate();
+            var deviceSesssion = jwt.encode({
+                iss: device.id,
+                exp: expires
+            }, jwtSecret);
+            
+            DeviceSession.create({ token: deviceSesssion, deviceId: device.id }).exec(function(err, session) {
+                if (err || !session) {
+                    cb(true);
+                } else {
+                    cb(null, session.token);
+                }
+            });
+        } else {
+            cb(true);
+        }
+    },
+    
     authenticated: function(body, cb) {
         var self = this;
         

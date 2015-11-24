@@ -1,4 +1,11 @@
 /**
+ *
+ * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
+ *
+ */
+var schedule = require('node-schedule');
+
+/**
  * Bootstrap
  * (sails.config.bootstrap)
  *
@@ -10,8 +17,14 @@
  */
 
 module.exports.bootstrap = function(cb) {
-
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
+    // TODO Loop through all devices and send notifications to appropriate clients
+    var notificationsProcessor = schedule.scheduleJob("*/1 * * * *", function() {
+        AutomaticService.sendNotifications(function(err, result) {
+            // We don't need to do anything with the result
+        });
+    });
+    
+    // It's very important to trigger this callback method when you are finished
+    // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+    cb();
 };

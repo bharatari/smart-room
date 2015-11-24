@@ -2,7 +2,7 @@ module.exports = {
     tableName: 'settings',
     schema: true,
     attributes: {
-        userId: {
+        deviceId: {
             type: 'string'
         },
         key: {

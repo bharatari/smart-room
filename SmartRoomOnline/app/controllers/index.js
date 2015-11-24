@@ -5,14 +5,15 @@ import valueUtils from 'smart-room-online/utils/value-utils';
 
 export default Ember.Controller.extend({
 	init() {
+        let self = this;
+        
 		this._super();
 		io.socket.get(
             config.routeLocation + "/api/values/subscribe"
         );
-        io.socket.on('new data', function(message) {
+        io.socket.on('value', function(message) {
             if(message) {
-				console.log(message);
-                valueUtils.processIncoming(this.get('configuration'), message);
+                self.set('configuration', valueUtils.processIncoming(self.get('configuration'), message.data));
             }
         });   
         io.socket.on('connect', function() {
@@ -21,7 +22,6 @@ export default Ember.Controller.extend({
 			);
         }); 
 	},
-    /* Need a default value in case WebSockets triggers before model resolves
+    // Need a default value in case WebSockets triggers before model resolves
 	configuration: valueUtils.configuration
-    */
 });
