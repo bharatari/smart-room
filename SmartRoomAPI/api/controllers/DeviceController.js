@@ -1,16 +1,6 @@
-/**
- * We won't be using device registration & authentication
- * in our current project. I created these functions
- * so that the server can accomodate a more modular setup
- * in case I wanted to continue this project later.
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     /**
      * Registers device using a 'sufficiently unique' unique ID.
-     *
-     * @author - Bharat Arimilli
      */
     registerDevice: function(req, res) {
         if (req.body) {
@@ -51,8 +41,6 @@ module.exports = {
     },
     /**
      * Returns device object from database based on uniqueId
-     *
-     * @author - Bharat Arimilli
      */
     getDevice: function(req, res) {
         if (req.body) {
@@ -76,8 +64,6 @@ module.exports = {
     },
     /**
      * Deletes device based on uniqueId
-     *
-     * @author - Bharat Arimilli
      */
     deleteDevice: function(req, res) {
         if (req.body) {

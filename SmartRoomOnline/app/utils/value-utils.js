@@ -1,13 +1,8 @@
-/**
- *
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- */
 import Ember from 'ember';
 
 export default {
 	configuration: [
-		{ name: "temperature", result: 0, suffix: "&deg;C", backgroundColor: "bg-dark-red" },
+		{ name: "temperature", result: 0, custom: true, backgroundColor: "bg-dark-red" },
 		{ name: "humidity", result: 0, suffix: "%", backgroundColor: "bg-red" },
 		{ name: "motion", result: false, custom: true, backgroundColor: "bg-teal", large: true },
 		{ name: "light", result: false, custom: true, backgroundColor: "bg-dark", large: true }	
@@ -22,7 +17,7 @@ export default {
 	 * @param {string} suffix - String to append to data value, ignored if custom is true.
      * @returns {string} - Formatted data value.
 	 */
-	processResult(name, result, custom, suffix) {
+	processResult(name, result, custom, suffix, displayFahrenheit) {
 		if(result != null) {
 			if(custom) {
 				if(name === "motion") {
@@ -30,6 +25,9 @@ export default {
 				}
 				else if (name === "light") {
 					return this.processLight(result);
+				}
+				else if (name === "temperature") {
+					return this.processTemperature(result, displayFahrenheit);
 				}
 				else {
 					// If custom was passed as true and there's no 
@@ -72,34 +70,6 @@ export default {
 		}
 	},
 	
-	/** 
-     * Formats motion data.
-     *
-     * @param {boolean} result
-     * @returns {string} 
-	 */
-	/*
-	processMotion(result) {
-		if(result != null) {
-			if(result) {
-				return "Motion Detected";
-			}
-			else {
-				return "No Motion";
-			}
-		}
-	},
-	
-	processLight(result) {
-		if (result != null) {
-			if (result) {
-				return "Lights On";
-			} else {
-				return "Lights Off";
-			}
-		}	
-	}, */
-	
 	processIncoming(values, incoming) {
 		if(values && incoming) {
 			for(let i = 0; i < values.length; i++) {
@@ -125,7 +95,6 @@ export default {
 		return configuration;
 	},
 	
-	/** @author - Miguel De La Rocha */
 	processTemperatureUnits(value, fahrenheit) {
 		if(value != null)
 		{
@@ -145,8 +114,20 @@ export default {
 		
 	},
 	
-	/** @author - Miguel De La Rocha */
+	processTemperature(value, displayFahrenheit) {
+		if (displayFahrenheit) {
+			return this.processTemperatureUnits(value, displayFahrenheit).toFixed(0) + "&deg;F";
+		} else {
+			return this.processTemperatureUnits(value, displayFahrenheit).toFixed(0) + "&deg;C";
+		}
+	},
 	
+	/** 
+     * Formats motion data.
+     *
+     * @param {boolean} result
+     * @returns {string} 
+	 */
 	processMotion(result) {
 		if (result != null)
 		{
@@ -165,8 +146,6 @@ export default {
 		}
 		
 	},
-	
-	/** @author - Miguel De La Rocha */
 	
 	processLight(result) {
 		if (result != null)

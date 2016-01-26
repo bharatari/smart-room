@@ -9,6 +9,7 @@ module.exports = function(defaults) {
   app.import('bower_components/bootstrap/dist/js/bootstrap.min.js');
   app.import('bower_components/moment/moment.js');
   app.import('vendor/sails.io.js');
+  app.import('vendor/animate.css');
   
   var mergeTrees = require('broccoli-merge-trees');
   var pickFiles = require('broccoli-static-compiler');

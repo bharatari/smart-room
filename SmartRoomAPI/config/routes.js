@@ -50,9 +50,10 @@ module.exports.routes = {
     
   // Settings Routes
   'get /api/settings':'SettingController.find',
-  'post /api/settings':'SettingController.update',
-  'put /api/settings':'SettingController.update',
-  'patch /api/settings':'SettingController.update',
+  'post /api/settings':'SettingController.create',
+  'post /api/settings/:id':'SettingController.update',
+  'put /api/settings/:id':'SettingController.update',
+  'patch /api/settings/:id':'SettingController.update',
     
   // WebSocket Watch Routes
   'get /api/values/subscribe':'ValueController.watch',

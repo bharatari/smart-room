@@ -48,6 +48,11 @@ export default Ember.Route.extend({
 					size: 1
 				},
 				sort: '-createdAt'
+			}),
+			displayFahrenheit: this.store.queryRecord('setting', { 
+				filter: { 
+					key: 'displayFahrenheit' 
+				}	
 			})
 		});
 	},
@@ -55,6 +60,7 @@ export default Ember.Route.extend({
 		// Throws error when no record exists for one of the types of values, _data of undefined
 		let configuration = valueUtils.processInitial(this.get('configuration'), model.temperature._internalModel._data, model.humidity._internalModel._data, model.motion._internalModel._data, model.light._internalModel._data);
 		controller.set('configuration', configuration);
+		controller.set('displayFahrenheit', model.displayFahrenheit._internalModel._data.value);
 	},
 	configuration: valueUtils.configuration
 });

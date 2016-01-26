@@ -1,8 +1,3 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     /**
      *
@@ -11,7 +6,7 @@ module.exports = {
      */
     watch: function(req, res) {
         if(req.isSocket == true) {
-            Notification.watch(req);
+            sails.sockets.join(req.socket, 'notifications');
             res.send('Connected');
         }
         else {

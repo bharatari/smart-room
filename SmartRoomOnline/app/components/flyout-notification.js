@@ -13,7 +13,7 @@ export default Ember.Component.extend({
     didInsertElement: function() {
         var self = this;
         setTimeout(function() {
-            self.set('display', false);
+            //self.set('display', false);
         }, 20000);
     },
     display: Ember.computed('flyout', {

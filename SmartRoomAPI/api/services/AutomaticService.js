@@ -1,8 +1,3 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     /**
      * Called from bootstrap.js to check data and send appropriate notifications
@@ -11,12 +6,21 @@ module.exports = {
      * @param {UtilityService~callback} cb - Called after the function finishes executing.
      */
     sendNotifications: function(cb) {
-        // TODO Collect values and send them together
-        // We're not sending individual notifications but a persistent state
+        var notifications = [];
         ValueService.lightsOnNotification(function(err, result) {
+            if (result) {
+                notifications.push(result);
+            }
             ValueService.temperature(function(err, result) {
+                if (result) {
+                    notifications.push(result);
+                }
                 ValueService.humidity(function(err, result) {
-                    cb(null, true);
+                    if (result) {
+                        notifications.push(result);
+                    }
+                    sails.sockets.broadcast('notifications', 'new notifications', notifications);
+                    cb(null, notifications);
                 });
             });
         });

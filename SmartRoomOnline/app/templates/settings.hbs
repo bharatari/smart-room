@@ -1,4 +1,5 @@
-{{sidebar-left}}
+{{sidebar-left goToIndex="goToIndex"}}
+{{modal-dialog body=modalBody title=modalTitle displayModal=modalDisplay}}
 <div class="app-container bg-dark col-md-10">
 	<form>
 		<div class="form-inline form-margin">
@@ -35,7 +36,7 @@
 		
 		<div class="checkbox">
 			<label class="white">
-				<input type="checkbox"> Display in Fahrenheit
+				{{input type="checkbox" checked=displayFahrenheit.value}} Display in Fahrenheit
 			</label>
 		</div>
 		

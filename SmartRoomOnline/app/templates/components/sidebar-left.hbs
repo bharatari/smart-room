@@ -1,2 +1,5 @@
-<h1 class="sidebar-brand">smart<br>room</h1>
+<a class="transparent-link" {{action 'goToIndex'}}><h1 class="sidebar-brand">smart<br>room</h1></a>
 {{flyout-notifications flyouts=notifications}}
+{{#if displaySettings}}
+	<button class="btn btn-sidebar" {{action 'goToSettings'}}>SETTINGS</button>
+{{/if}}

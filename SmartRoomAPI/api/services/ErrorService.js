@@ -1,8 +1,3 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     missingParameter: function(functionName, argumentName) {
         if(argumentName) {

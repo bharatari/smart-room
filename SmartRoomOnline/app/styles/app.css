@@ -16,7 +16,8 @@
  *    1. Colors
  * 4. Notifications
  * 5. Controls
- * 6. Media Queries 
+ * 6. Animations
+ * 7. Media Queries 
  *
  */
  
@@ -72,6 +73,29 @@
     font-size: 90px;
     font-weight: 300;
     text-transform: uppercase;
+}
+
+.loading-container {
+    height: 100vh;
+    width: 100vw;  
+    padding-top: 40vh;
+    padding-left: 40vw;
+}
+
+.loading-spinner {
+    font-size: 60px;
+    z-index: 999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -58px;
+    margin-left: -39px;
+    color: white;
+    -webkit-animation: spin 1s ease-in-out infinite;    
+    -moz-animation: spin 1s ease-in-out infinite;    
+    -ms-animation: spin 1s ease-in-out infinite;    
+    -o-animation: spin 1s ease-in-out infinite;    
+    animation: spin 1s ease-in-out infinite;    
 }
 
 /**
@@ -254,6 +278,33 @@
     background-color: #e45c00;
 }
 
+.btn-sidebar {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    margin-left: -15px;
+    background-color: rgba(60, 60, 60, 1);
+    border-radius: 0px;
+    border: none;
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-family: 'Open Sans';
+    font-weight: 700;
+    color: white;
+    text-align: left;
+    height: 50px;
+    -webkit-transition: background-color 0.2s ease-in, color 0.2s ease-out;
+    -moz-transition: background-color 0.2s ease-in, color 0.2s ease-out;
+    -ms-transition: background-color 0.2s ease-in, color 0.2s ease-out;
+    -o-transition: background-color 0.2s ease-in, color 0.2s ease-out;
+    transition: background-color 0.2s ease-in, color 0.2s ease-out;
+}
+
+.btn-sidebar:hover, btn-sidebar:focus, btn-sidebar:active {
+    background-color: #232323;
+}
+
 .form-light {
     background-color: #232323;
     border-radius: 4px;
@@ -269,9 +320,30 @@
     margin-right: 10px;
 }
 
+.transparent-link {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.transparent-link:hover, .transparent-link:focus, .transparent-link:active {
+    text-decoration: none;
+    color: white;
+}
+
 /**
  *
- * @section - 6. Media Queries
+ * @section - 6. Animations
+ *
+ */
+ 
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+ 
+/**
+ *
+ * @section - 7. Media Queries
  *
  */
  
@@ -311,6 +383,12 @@
     .data-column-data {
         font-size: 60px;
         margin-top: 0px;
+    }
+    
+    .btn-sidebar {
+        margin-top: -106px;
+        position: relative;
+        width: 100vw !important;
     }
  }
  

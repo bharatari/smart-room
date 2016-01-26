@@ -1,17 +1,7 @@
-/**
- * We won't be using device registration & authentication
- * in our current project. I created these functions
- * so that the server can accomodate a more modular setup/system
- * in case I wanted to continue this project later.
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     /**
      * Creates and persists a device session, returns a JWT 
      * authentication token to the client.
-     *
-     * @author - Bharat Arimilli
      */
     create: function(req, res) {
         if (req.body) {

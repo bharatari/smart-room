@@ -23,5 +23,13 @@ export default Ember.Controller.extend({
         }); 
 	},
     // Need a default value in case WebSockets triggers before model resolves
-	configuration: valueUtils.configuration
+	configuration: valueUtils.configuration,
+    actions: {
+        goToSettings() {
+            this.transitionToRoute('settings');
+        },
+        goToIndex() {
+            this.transitionToRoute('index');
+        }
+    }
 });

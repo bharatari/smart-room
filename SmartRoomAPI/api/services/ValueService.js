@@ -1,18 +1,11 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @module ValueService
- */
 var moment = require('moment');
 
 module.exports = {
     /**
      * Checks if the client is eligible for a temperature min/max 
      * notification and sends the notification if it is.
-     *
-     * @author - Bharat Arimilli
      */
-    // TODO Check lastTemperature
+    // TODO Remove lastTemperature check
     temperature: function(cb) {
         var self = this;
         
@@ -21,45 +14,30 @@ module.exports = {
                 // No records, so there's no notification to send
                 cb(null, false);
             } else {
-                // Find which record the last temperature notification was sent for
-                Setting.findOne({ key: 'lastTemperature' }).exec(function(err, setting) {
-                    if (setting) {
-                        if (setting.value === temperature.id) {
-                            // We've already sent this notification for this record
-                            return cb(null, false);
-                        }
+                self.temperatureHigh(temperature.result, function(err, result) {
+                    if (err || !result) {
+                        self.temperatureLow(temperature.result, function(err, result) {
+                            if (err || !result) {
+                                cb(null, false);
+                            } else {
+                                NotificationService.submitNotification("Temperature Low", "Your temperature seems to be lower than usual", function(err, result) {
+                                    if (err || !result) {
+                                        cb(null, false);
+                                    } else {
+                                        cb(null, result);
+                                    } 
+                                });
+                            }
+                        });
+                    } else {
+                        NotificationService.submitNotification("Temperature High", "Your temperature seems to be higher than usual", function(err, result) {
+                            if (err || !result) {
+                                cb(null, false);
+                            } else {
+                                cb(null, result);
+                            }
+                        });
                     }
-                    self.temperatureHigh(temperature.result, function(err, result) {
-                        if (err || !result) {
-                            self.temperatureLow(temperature.result, function(err, result) {
-                                if (err || !result) {
-                                    cb(null, false);
-                                } else {
-                                    NotificationService.sendNotification("Temperature Low", "Your temperature seems to be lower than usual", function(err, result) {
-                                        if (err || !result) {
-                                            cb(null, false);
-                                        } else {
-                                            SettingService.updateSetting('lastTemperature', temperature.id, function(err, result) {
-                                                // Allow updateSetting to fail silently
-                                                cb(null, true);
-                                            });
-                                        } 
-                                    });
-                                }
-                            });
-                        } else {
-                            NotificationService.sendNotification("Temperature High", "Your temperature seems to be higher than usual", function(err, result) {
-                                if (err || !result) {
-                                    cb(null, false);
-                                } else {
-                                    SettingService.updateSetting('lastTemperature', temperature.id, function(err, result) {
-                                        // Allow updateSetting to fail silently
-                                        cb(null, true);
-                                    });
-                                }
-                            });
-                        }
-                    });
                 });
             }
         });
@@ -68,8 +46,6 @@ module.exports = {
     /**
      * Checks if the client is eligible for a humidity min/max 
      * notification and sends the notification if it is.
-     *
-     * @author - Bharat Arimilli
      */
     // Check lastHumidity
     humidity: function(cb) {
@@ -80,45 +56,30 @@ module.exports = {
                 // No records, so no notifications need to be sent
                 cb(null, false);
             } else {
-                // Find which record the last humidity notification was sent for
-                Setting.findOne({ key: 'lastHumidity' }).exec(function(err, setting) {
-                    if (setting) {
-                        if (setting.value === humidity.id) {
-                            // Already sent a notification for this record
-                            return cb(null, false);
-                        }
+                self.humidityHigh(humidity.result, function(err, result) {
+                    if (err || !result) {
+                        self.humidityLow(humidity.result, function(err, result) {
+                            if (err || !result) {
+                                cb(null, false);
+                            } else {
+                                NotificationService.submitNotification("Humidity Low", "Your humidity seems to be lower than usual", function(err, result) {
+                                    if (err || !result) {
+                                        cb(null, false);
+                                    } else {
+                                        cb(null, result);
+                                    } 
+                                });
+                            }
+                        });
+                    } else {
+                        NotificationService.submitNotification("Humidity High", "Your humidity seems to be higher than usual", function(err, result) {
+                            if (err || !result) {
+                                cb(null, false);
+                            } else {
+                                cb(null, result);
+                            }
+                        });
                     }
-                    self.humidityHigh(humidity.result, function(err, result) {
-                        if (err || !result) {
-                            self.humidityLow(humidity.result, function(err, result) {
-                                if (err || !result) {
-                                    cb(null, false);
-                                } else {
-                                    NotificationService.sendNotification("Humidity Low", "Your humidity seems to be lower than usual", function(err, result) {
-                                        if (err || !result) {
-                                            cb(null, false);
-                                        } else {
-                                            SettingService.updateSetting('lastHumidity', humidity.id, function(err, result) {
-                                                // Allow updateSetting to fail silently
-                                                cb(null, true);
-                                            });
-                                        } 
-                                    });
-                                }
-                            });
-                        } else {
-                            NotificationService.sendNotification("Humidity High", "Your humidity seems to be higher than usual", function(err, result) {
-                                if (err || !result) {
-                                    cb(null, false);
-                                } else {
-                                    SettingService.updateSetting('lastHumidity', humidity.id, function(err, result) {
-                                        // Allow updateSetting to fail silently
-                                        cb(null, true);
-                                    });
-                                }
-                            });
-                        }
-                    });
                 });
             }
         });
@@ -127,9 +88,8 @@ module.exports = {
     /**
      * Checks if the client is eligible for a lights on 
      * notification and sends the notification if it is.
-     *
-     * @author - Bharat Arimilli
      */
+    // TODO Use roomNotOccupied
     lightsOnNotification: function(cb) {
         var self = this;
         
@@ -147,22 +107,11 @@ module.exports = {
                         } else {
                             if (light.result) {
                                 // No motion detected, lights are on
-                                // Now we need to see if we've already sent a notification for this specific instance of the scenario
-                                self.eligibleForLightsOnNotification(motion, function(err, result) {
+                                NotificationService.submitNotification("Your lights are on", "You seemed to have left the room with the lights on", function(err, result) {
                                     if (err || !result) {
                                         cb(null, false);
                                     } else {
-                                        NotificationService.sendNotification("Your lights are on", "You seemed to have left the room with the lights on", function(err, result) {
-                                            if (err || !result) {
-                                                cb(null, false);
-                                            } else {
-                                                SettingService.updateSetting('lastLightsOn', motion.id, function(err, result) {
-                                                    // Allow updateSetting to fail silently
-                                                    cb(null, true);
-                                                });
-                                                
-                                            }
-                                        });
+                                        cb(null, result);
                                     }
                                 });
                             } else {
@@ -175,37 +124,11 @@ module.exports = {
                 }
             }
         });
-    },
-
-    /**
-     * Checks if the client is eligible for a lights on 
-     * notification based on whether one was already sent for this
-     * record.
-     *
-     * @author - Bharat Arimilli
-     */
-    eligibleForLightsOnNotification: function(lastMotion, cb) {
-        Setting.findOne({ key: 'lastLightsOn' }).sort('createdAt DESC').exec(function(err, setting) {
-            // No such setting exists, send the notification
-            if (err || !setting) {
-                cb(null, true);
-            } else {
-                if (setting.valueId === lastMotion.id) {
-                    // we already sent a notification for this record
-                    cb(null, false);
-                } else {
-                    // Checking the last motion record is the critical factor here
-                    cb(null, true);
-                }          
-            }
-        });
-    },
-    
+    },    
     
     /**
      * Checks if the room has been unoccupied for over 1 minute.
      *
-     * @author - James
      * @param {ValueService~callback} cb 
      */
     roomNotOccupied: function(cb) {
@@ -239,8 +162,6 @@ module.exports = {
     /**
      * Checks if temperature is over the user-specified
      * maximum and returns (through a callback) true or false.
-     *
-     * @author - Danny Diep
      */
     temperatureHigh: function(currentTemperature, cb) {
         Setting.findOne({ key: "temperatureMax" }).exec(function(err, settings) {
@@ -264,8 +185,6 @@ module.exports = {
     /**
      * Checks if temperature is under the user-specified
      * minimum and returns (through a callback) true or false.
-     *
-     * @author - Danny Diep
      */
     temperatureLow: function(currentTemperature, cb) {
         Setting.findOne({ key: "temperatureMin" }).exec(function(err, settings) {
@@ -290,8 +209,6 @@ module.exports = {
     /**
      * Checks if humidity is over the user-specified maximum
      * and returns (through a callback) true or false.
-     *
-     * @author - Jack Clark
      */
     humidityHigh: function(currentHumidity, cb) {
         Setting.findOne({ key: "humidityMax" }).exec(function(err, settings) {
@@ -314,8 +231,6 @@ module.exports = {
     /**
      * Checks if humidity is under the user-specified minimum
      * and returns (through a callback) true or false.
-     *
-     * @author - Jack Clark
      */
     humidityLow: function(currentHumidity, cb) {
         Setting.findOne({ key: "humidityMin" }).exec(function(err, settings) {

@@ -1,4 +1,4 @@
-{{sidebar-left}}
+{{sidebar-left displaySettings=true goToSettings="goToSettings" goToIndex="goToIndex"}}
 {{#each configuration as |value|}}
-	{{value-column backgroundColor=value.backgroundColor name=value.name result=value.result custom=value.custom suffix=value.suffix large=value.large }}
+	{{value-column backgroundColor=value.backgroundColor name=value.name result=value.result custom=value.custom suffix=value.suffix large=value.large displayFahrenheit=displayFahrenheit }}
 {{/each}}

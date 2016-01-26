@@ -1,8 +1,3 @@
-/**
- *
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- */
 var schedule = require('node-schedule');
 
 /**
@@ -19,6 +14,8 @@ var schedule = require('node-schedule');
 module.exports.bootstrap = function(cb) {
     // TODO Loop through all devices and send notifications to appropriate clients
     var notificationsProcessor = schedule.scheduleJob("*/1 * * * *", function() {
+        // Scheduled task allows for notifications not to clog up POST requests
+        // and create latency
         AutomaticService.sendNotifications(function(err, result) {
             // We don't need to do anything with the result
         });

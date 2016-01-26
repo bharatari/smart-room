@@ -1,7 +1,6 @@
 /* global io */
 import Ember from "ember";
 import config from 'smart-room-online/config/environment';
-import windowsUtils from 'smart-room-online/utils/windows-utils';
 
 export default Ember.Component.extend({ 
 	tagName: 'div',
@@ -12,12 +11,16 @@ export default Ember.Component.extend({
         io.socket.get(
             config.routeLocation + "/api/notifications/subscribe"
         );
-        io.socket.on('notification', function(message) {
+        io.socket.on('new notifications', function(message) {
             if(message) {
                 let notifications = self.get('notifications');
-                notifications.pushObject(message.data);
-                windowsUtils.notify(message.data.body);
-                self.set('notifications', notifications);
+                self.set('notifications', message);
+                //notifications.pushObject(message.data);
+                /*
+                for(let i = 0; i < notifications.length; i++) {
+                    windowsUtils.notify(notifications[i].body);
+                }*/
+                //self.set('notifications', notifications);
             }
         });   
         io.socket.on('connect', function() {
@@ -26,5 +29,13 @@ export default Ember.Component.extend({
             );
         });
     },
-	notifications: []
+	notifications: [],
+    actions: {
+        goToSettings() {
+            this.sendAction('goToSettings');
+        },
+        goToIndex() {
+            this.sendAction('goToIndex');
+        }
+    }
 });

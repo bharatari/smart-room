@@ -1,11 +1,3 @@
-/**
- * We won't be using device registration & authentication
- * in our current project. I created these functions
- * so that the server can accomodate a more modular setup/system
- * in case I wanted to continue this project later.
- *
- * @author - Bharat Arimilli
- */
 var jwt = require('jwt-simple');
 var Q = require('q');
 var jwtSecret = sails.config.jwtSecret;

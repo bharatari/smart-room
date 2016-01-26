@@ -1,8 +1,3 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @author - Bharat Arimilli
- */
 module.exports = {
     find: function(req, res) {
         UtilityService.find('setting', 'settings', req.query, function(err, result) {
@@ -10,8 +5,17 @@ module.exports = {
         });
     },
     update: function(req, res) {
-        UtilityService.upsertSetting(req.body, function(err, result) {
-            if(err || !result) {
+        UtilityService.updateSetting(req.params.id, req.body, function(err, result) {
+            if (err || !result) {
+                res.badRequest(err);
+            } else {
+                res.json(result);
+            }
+        });
+    },
+    create: function(req, res) {
+        UtilityService.create('setting', 'settings', req.body, function(err, result) {
+            if (err || !result) {
                 res.badRequest(err);
             } else {
                 res.json(result);

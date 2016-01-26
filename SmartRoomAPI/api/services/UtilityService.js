@@ -1,8 +1,3 @@
-/**
- * Bharat Arimilli, Jack Clark, James Linton, Miguel De La Rocha, Danny Diep
- *
- * @module UtilityService
- */
 var _ = require('lodash');
 var serializer = require('jsonapi-serializer');
 var string = require('underscore.string');
@@ -11,7 +6,6 @@ module.exports = {
     /** 
      * Uses JavaScript split function to create an array from a comma-separated-list.
      *
-     * @author - Bharat Arimilli
      * @param {string} csv - Comma-separated list.
      * @param {boolean} space - Whether the function should split with the ', ' or ',' delimiter.
      * @returns {Array}
@@ -37,7 +31,6 @@ module.exports = {
      * Custom sort function created because Waterline doesn't seem to support
      * multiple sort fields.
      *
-     * @author - Bharat Arimilli
      * @param {Array} data 
      * @param {string} params
      * @returns {Array}
@@ -54,7 +47,6 @@ module.exports = {
     /**
      * Splits sort paramters into an array and processes them
      *
-     * @author - Bharat Arimilli
      * @param {string} params - A comma-separated list of sort parameters.
      */
     splitSortParameters: function(params) {
@@ -71,7 +63,6 @@ module.exports = {
     /** 
      * Converts sort parameters to objects.
      *
-     * @author - Bharat Arimilli
      * @param {string} param 
      * @returns {Object}
      * @throws {TypeError}
@@ -111,7 +102,6 @@ module.exports = {
     /**
      * Processes page and skip for data pagination.
      *
-     * @author - Bharat Arimilli
      * @param {number} page 
      * @param {number} size
      * @returns {number}
@@ -138,7 +128,6 @@ module.exports = {
      * Converts Waterline ORM sort parameters to lodash sort parameters.
      * If parameters are invalid or missing, it defaults to 'asc'.
      *
-     * @author - Bharat Arimilli
      * @param {Object} n 
      * @returns {string} - Returns lodash compatible sort parameter.
      */
@@ -163,7 +152,6 @@ module.exports = {
     /** 
      * Modular find function to be used with any valid Waterline ORM model.
      *
-     * @author - Bharat Arimilli
      * @param {string} model - Name of the model.
      * @param {string} pluralized - Pluralized name of model.
      * @param {Object} query - The req.query object from the original request.
@@ -232,7 +220,6 @@ module.exports = {
      * Modular CRUD function that returns a single record
      * based on the record's id that can be used with any Waterline ORM Model.
      *
-     * @author - Bharat Arimilli
      * @param {string} model - Name of model.
      * @param {string} pluralized - Pluralized form of model name.
      * @param {string} param - The request parameter (id).
@@ -257,30 +244,38 @@ module.exports = {
     /**
      * Modular CRUD create function that can be used with any Waterline ORM Model.
      *
-     * @author - Bharat Arimilli
      * @param {string} model - Name of model.
      * @param {object} body - The HTTP request body.
      * @param {UtilityService~callback} cb - Called after function finishes executing.
      */
     // TODO Ignore id 
-    create: function(model, body, cb) {
+    create: function(model, pluralized, body, cb) {
+        var self = this;
         var Model = sails.models[model];
         
         if (body) {
             var deserialized = this.deserialize(body);
+            var object;
             if(!deserialized) {
-                return cb(true);
+                deserialized = this.deserializeSingle(body);
+                if(!deserialized) {
+                    return cb(true);
+                }
+                object = deserialized;
+            } else {
+                object = deserialized[0];
             }
-            var object = deserialized[0];
             if(!object) {
                 return cb(true);
             }
+            delete object._id;
+            delete object.id;
             Model.create(object).exec(function(err, data) {
                 if (err || !data) {
                     cb(ErrorService.databaseError(err));
                 } else {
                     Model.publishCreate(data.toJSON());
-                    cb(null, data);
+                    cb(null, self.convertResponse(data, pluralized));
                 }
             });
         } else {
@@ -293,7 +288,6 @@ module.exports = {
      * This function ended up being too slow and created too much latency.
      * We ended up doing this checking on the client.
      *
-     * @author - Bharat Arimilli
      * @param {Object} body - HTTP request body.
      * @param {UtilityService~callback} cb - Called after function finishes executing.
      */
@@ -370,7 +364,6 @@ module.exports = {
     /**
      * Finds most recent Value record.
      *
-     * @author - Bharat Arimilli
      * @param {string} name - Name of Value record type.
      * @param {UtilityService~callback} cb - Called after function finishes executing.
      */
@@ -387,39 +380,70 @@ module.exports = {
     /**
      * Modular CRUD update function that can be used with any Waterline ORM Model.
      *
-     * @author - Bharat Arimilli
      * @param {string} model - Name of model.
      * @param {Object} body - HTTP request body.
      * @param {UtilityService~callback} cb - Called after function finishes executing.
      */
-    update: function(model, body, cb) {
+    update: function(model, pluralized, id, body, cb) {
+        var self = this;
         var Model = sails.models[model];
-        
+
         if (body) {
-            if (body.data) {
-                Model.update(body).exec(function(err, data) {
+            var deserialized = this.deserializeSingle(body);
+            if (!deserialized) {
+                return cb(true);
+            }
+            
+            if (id) {
+                Model.update({ id: id }, deserialized).exec(function(err, data) {
                     if (err || !data) {
                         cb(ErrorService.databaseError(err));
                     } else {
-                        Model.publishUpdate(data.toJSON());
-                        cb(null, data);
+                        cb(null, self.convertResponse(data, pluralized));
                     }
-                });
+                }); 
             } else {
-                cb(ErrorService.missingParameter('create', 'body'));
+                cb(ErrorService.missingParameter('update', 'id'));
             }
         } else {
-            cb(ErrorService.missingParameter('create', 'body'));
+            cb(ErrorService.missingParameter('update', 'body'));
+        }
+    },
+    
+    updateSetting: function(id, body, cb) {
+        var self = this;
+        if (body && id) {
+            var deserialized = this.deserializeSingle(body);
+            if (!deserialized) {
+                return cb(true);
+            }
+            
+            this.validateSetting(deserialized.key, deserialized.value, function(err, result) {
+                if (err || !result) {
+                    cb(true);
+                } else {
+                    self.update('setting', 'settings', id, body, function(err, result) {
+                        if (err || !result) {
+                            cb(ErrorService.databaseError(err));
+                        } else {
+                            cb(null, result);
+                        }
+                    });
+                }
+            });
+        } else {
+            cb(ErrorService.missingParameter('updateSetting', 'body, id'));
         }
     },
     
     /**
      * Upsert functionality for the Setting model.
+     * Not used.
      *
-     * @author - Bharat Arimilli
      * @param {Object} body - HTTP request body.
      * @param {UtilityService~callback} cb - Called after function finishes executing.
      */
+    /*
     upsertSetting: function(body, cb) {
         var self = this;
 
@@ -457,12 +481,11 @@ module.exports = {
         } else {
             cb(ErrorService.missingParameter('upsertSetting', 'body'));
         }
-    },
+    },*/
     
     /**
      * Modular CRUD delete/destroy function that can be used with any Waterline ORM Model.
      *
-     * @author - Bharat Arimilli
      * @param {string} model - Name of model.
      * @param {string} param - Request parameter (id).
      * @param {UtilityService~callback} cb - Called after function finishes executing.
@@ -486,7 +509,6 @@ module.exports = {
     /**
      * Camelizes property names in an object.
      * 
-     * @author - Bharat Arimilli
      * @param {Object} object
      * @returns {Object}
      */
@@ -503,7 +525,6 @@ module.exports = {
     /**
      * Deserializes a JSON API 1.0-compliant request/response into an object.
      *
-     * @author - Bharat Arimilli
      * @param {Object} object - JSON API 1.0 response/request object.
      * @returns {Array}
      */
@@ -541,11 +562,37 @@ module.exports = {
     },
 
     /**
+     * Deserializes a JSON API 1.0-compliant request/response with a single resource, into an object.
+     *
+     * @param {Object} object - JSON API 1.0 response/request object.
+     * @returns {Object}
+     */
+    deserializeSingle: function(object) {
+        var deserialized = {};
+        if (object) {
+            if (object.data) {
+                if (object.data.id) {
+                    deserialized.id = object.data.id;
+                }
+                if (object.data.attributes) {
+                    for (var property in object.data.attributes) {
+                        if (object.data.attributes.hasOwnProperty(property)) {
+                            deserialized[property] = object.data.attributes[property];
+                        }
+                    }
+                }
+                return deserialized;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    },
+    /**
      * Iterates through properties in an object and adds and returns them 
      * in an array.
      *
-     *
-     * @author - Bharat Arimilli
      * @param {Object} data
      * @returns {Array}
      */
@@ -568,7 +615,6 @@ module.exports = {
      * Serializes data to be JSON API 1.0-compliant JSON that can be consumed
      * by our client's data persistence library.
      *
-     * @author - Bharat Arimilli
      * @param {Object} data
      * @param {string} pluralized - Pluralized name of model.
      * @returns {Object}
@@ -602,6 +648,8 @@ module.exports = {
     },
     
     validateSetting: function(key, value, cb) {
+        var self = this;
+        
         if (key === "humidityMin") {
             Setting.findOne({ key: "humidityMax" }).exec(function(err, humidityMax) {
                 if (err || !humidityMax) {
@@ -609,7 +657,7 @@ module.exports = {
                     // to validate
                     cb(null, true);
                 } else {
-                    cb(null, validateHumidityMin(value, humidityMax.value));
+                    cb(null, self.validateHumidityMin(value, humidityMax.value));
                 }
             });
         } else if (key === "humidityMax") {
@@ -619,7 +667,7 @@ module.exports = {
                     // to validate
                     cb(null, true);
                 } else {
-                    cb(null, validateHumidityMax(value, humidityMin.value));
+                    cb(null, self.validateHumidityMax(value, humidityMin.value));
                 }
             });
         } else if (key === "temperatureMax") {
@@ -629,7 +677,7 @@ module.exports = {
                     // to validate
                     cb(null, true);
                 } else {
-                    cb(null, validateTemperatureMax(value, temperatureMin.value));
+                    cb(null, self.validateTemperatureMax(value, temperatureMin.value));
                 }
             });
         } else if (key === "temperatureMin") {
@@ -639,7 +687,7 @@ module.exports = {
                     // to validate
                     cb(null, true);
                 } else {
-                    cb(null, validateTemperatureMin(value, temperatureMax.value));
+                    cb(null, self.validateTemperatureMin(value, temperatureMax.value));
                 }
             });
         } else {
@@ -652,7 +700,6 @@ module.exports = {
     /**
      * Validates minimum temperature value.
      *
-     * @author - James Linton
      *
      */
     validateTemperatureMin: function(temperatureMin, temperatureMax) {
@@ -667,9 +714,8 @@ module.exports = {
         return true;
     },
     
-    /** @author - Danny Diep */
     validateTemperatureMax: function(temperatureMax, temperatureMin) {
-        if(temperatureMax <= tempertureMin)
+        if(temperatureMax > temperatureMin)
         {
             return true;
         }
@@ -678,8 +724,7 @@ module.exports = {
             return false;
         }
     },
-    
-    /** @author- Jack Clark */
+
     validateHumidityMax: function(humidityMax, humidityMin) {
         if (humidityMax <= humidityMin) {
         return false;
@@ -689,9 +734,8 @@ module.exports = {
         }
     },
     
-    /** @author - Jack Clark */
     validateHumidityMin: function(humidityMin, humidityMax) {
-       if (humidityMin >= humidityMin) {
+       if (humidityMin >= humidityMax) {
         return false;
         }
         else {

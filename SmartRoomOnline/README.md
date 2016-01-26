@@ -1,7 +1,6 @@
-# Smart-room-online
+# SmartRoomOnline
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This README outlines the details of collaborating on this Ember application. SmartRoomOnline is the web app client for the SmartRoom project built with the Ember.js MVC framework.
 
 ## Prerequisites
 
@@ -38,10 +37,6 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 * `ember build` (development)
 * `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
 
 ## Further Reading / Useful Links
 

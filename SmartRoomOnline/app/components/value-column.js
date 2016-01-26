@@ -6,6 +6,6 @@ export default Ember.Component.extend({
 	classNames: ['data-column', 'column'],
 	classNameBindings: ['large:col-md-3:col-md-2', 'backgroundColor'],
 	processedValue: Ember.computed('name', 'result', 'custom', 'suffix', function() {
-		return valueUtils.processResult(this.get('name'), this.get('result'), this.get('custom'), this.get('suffix'));
+		return valueUtils.processResult(this.get('name'), this.get('result'), this.get('custom'), this.get('suffix'), this.get('displayFahrenheit'));
 	})
 });
