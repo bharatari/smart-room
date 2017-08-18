@@ -1,13 +1,12 @@
 # Smart Room
-A web server and web app client designed to recieve, process and display data coming from a Raspberry Pi. This project was initially inspired by a project I made for my CS1200 Raspberry Pi Group project, but I since rewrote and restructured the application to be modular, secure and reliable.
+
+A web server and web app client designed to recieve, process and display data coming from a Raspberry Pi. This project was initially built for a Raspberry Pi group project for the CS1200 course at UT Dallas (a collaboration between Bharat Arimilli, Jack Clark, Miguel De La Rocha, Danny Diep and James Linton), but I have since made changes to make the application more modular, secure and reliable.
 
 # About the Project
 
 This project contains three primary components, a Node.js server (using the Sails.js framework), an Ember.js web app client and a C# Windows Universal App running on a Raspberry Pi. We also have an additional Windows Universal App written in C# designed to run on Windows 10 PCs and phones to register Cortana voice commands that can communicate with and return data from our server.
 
 The server of this project was designed to be entirely RESTFul while following the JSON API 1.0 specification, to ensure a consistent server API that can be easily consumed by our Ember.js client (that runs the Ember Data data persistence layer). The server is built on Node.js with the Sails.js framework. Our database is a MongoDB database.
-
-The server and web app are currently hosted at smartroom-55120.onmodulus.net. This is the server all other components of our applications connect to.
 
 # Features
 
